@@ -1,0 +1,31 @@
+{
+  "name": "api_job_search_planner",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "serve.js",
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/diegojfcampos/api_job_search_planner.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/diegojfcampos/api_job_search_planner/issues"
+  },
+  "homepage": "https://github.com/diegojfcampos/api_job_search_planner#readme",
+  "dependencies": {
+    "@fastify/cors": "^8.2.1",
+    "fastify": "^4.15.0",
+    "fastify-swagger": "^5.2.0",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
