@@ -20,7 +20,12 @@
   },
   "homepage": "https://github.com/diegojfcampos/api_job_search_planner#readme",
   "dependencies": {
+    "@fastify/auth": "^4.2.0",
     "@fastify/cors": "^8.2.1",
+    "@fastify/env": "^4.2.0",
+    "@fastify/jwt": "^6.7.1",
+    "@fastify/mongodb": "^6.2.0",
+    "@fastify/session": "^10.1.1",
     "fastify": "^4.15.0",
     "fastify-swagger": "^5.2.0",
     "uuid": "^9.0.0"
