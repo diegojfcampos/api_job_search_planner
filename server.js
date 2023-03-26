@@ -1,11 +1,17 @@
 const app = require('fastify')({ logger: true })
 const cors = require('@fastify/cors')
+const dbSchema = require('./src/models/dbschema')
 
 //Setting Up Cors
 app.register(cors,{ 
     origin: true,
     methods: 'GET,POST,PUT,DELETE'
 })
+
+
+
+app.register(require('./src/controllers/dbconnect'))
+
 
 //Seting Up Routes
 app.get('/', async (request, reply) =>{
