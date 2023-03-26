@@ -1,8 +1,8 @@
 const dbSchema = {
     type: 'object',
-    required: ['DB_PASSWORD'],
+    required: ['db_password'],
     properties: {
-      DB_PASSWORD: {
+      db_password: {
         type: 'string'
       }
     }
