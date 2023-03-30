@@ -2,11 +2,10 @@
   "name": "api_job_search_planner",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "serve.js",
-    "dev": "nodemon server.js"
+    "dev": "node --watch --no-warnings app.js"
   },
   "repository": {
     "type": "git",
@@ -20,18 +19,9 @@
   },
   "homepage": "https://github.com/diegojfcampos/api_job_search_planner#readme",
   "dependencies": {
-    "@fastify/auth": "^4.2.0",
     "@fastify/cors": "^8.2.1",
     "@fastify/env": "^4.2.0",
-    "@fastify/jwt": "^6.7.1",
-    "@fastify/mongodb": "^5.0.0",
-    "@fastify/session": "^10.1.1",
-    "dotenv": "^16.0.3",
-    "fastify": "^4.15.0",
-    "fastify-swagger": "^5.2.0",
-    "uuid": "^9.0.0"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.22"
+    "@fastify/mongodb": "^7.0.0",
+    "fastify": "^4.15.0"
   }
 }
