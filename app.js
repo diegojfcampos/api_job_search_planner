@@ -8,7 +8,7 @@ const start = async () => {
     try {
     //Registering @cors
     await app.register(corsFatify, {
-        origin: '*',
+        origin: '0.0.0.0',
         methods: ['GET', 'POST', 'PUT', 'DELETE'],
         allowedHeaders: ['Content-Type', 'Authorization'],
         exposedHeaders: ['Content-Type', 'Authorization'],
@@ -33,13 +33,22 @@ const start = async () => {
     //Debugging DB connection
     console.log({Server_Status: app.config.PORT})
 
-    //Registering Routes
+    /*    
+    *
+    * Registering Routes
+    * 
+    */
+    
+    //Root route
     app.get('/', async (request, reply) => {
         reply.send({ Server_Status: 'Running' })
     })
 
+    //Register route
+    app.register(require('./src/routes/register') , { prefix: '/api/v1' })
+
     //Running Server
-    await app.listen({port:3001, host: '0.0.0.0'})    
+    await app.listen({port:3000})    
 
     }catch (err) {
         app.log.error(err)
