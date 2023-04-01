@@ -33,20 +33,10 @@ const start = async () => {
       }).after(() => {
         const db = app.mongo.db;
         const usersCollection = db.collection('users');
-<<<<<<< HEAD
         usersCollection.createIndex({ username: 1 }, { unique: true })});
     
     //Debugging DB connection
     console.log({Server_Status: app.config.PORT})
-    
-    /*    
-    *
-    * Registering Routes
-    * 
-=======
-        usersCollection.createIndex({ username: 1 }, { unique: true });
-    });  
-    
     
     /*
     *Registering Secure Session
@@ -66,7 +56,6 @@ const start = async () => {
  
     /* 
     *Registering Routes
->>>>>>> 7482427 (build: created authentication with jwt dotenve and  route login)
     */
     
     //Root route
@@ -77,8 +66,7 @@ const start = async () => {
     //Routes
     app.register(require('./src/routes/register') , { prefix: '/api/v1' }); //Signup
     app.register(require('./src/routes/login') , { prefix: '/api/v1' }); //Login
-    app.register(require('./src/routes/user') , { prefix: '/api/v1' }); //User
-    
+    app.register(require('./src/routes/user') , { prefix: '/api/v1' }); //User  
 
     
     /* 
@@ -95,19 +83,6 @@ const start = async () => {
             consumes: ['application/json'],
             produces: ['application/json']
         },
-    }),
-
-    
-    //Registering @Fastify/Swagger
-    app.register(require('@fastify/swagger'), {
-       exposeRoute: true,
-       routePrefix: '/documentation',        
-       swagger: {
-           info: { title: 'Job Tracker API', description: 'API for Job Tracker', version: '0.1.0' },            
-           schemes: ['http', 'https'],
-           consumes: ['application/json'],
-           produces: ['application/json']
-       },
     }),
 
     //Running Server
