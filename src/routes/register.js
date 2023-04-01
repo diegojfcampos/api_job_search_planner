@@ -1,45 +1,35 @@
-const {userSchema, getUserOpts} = require('../models/userSchema');
+const registerSchema = require('../models/registerSchema');
 const { v4: uuidv4 } = require('uuid');
 const bcrypt = require('bcrypt');
 
 
-async function userRoutes(app, options, done) {
+async function registerRoute(app, options, done) {
     //Register route
-    app.post('/register', userSchema, async (request, reply) => {
+    app.post('/register', {schema: {body: registerSchema}}, async (request, reply) => {
         const {username, password} = request.body;
+
         const db = app.mongo.db;
         const collection = db.collection('users');
-        const hashedPassword = await bcrypt.hash(password, 10) ;
+        
         const user = {
             _id: uuidv4(),
             username,
-            password: hashedPassword,
+            password: await bcrypt.hash(password, 256),
             job_tracker: [],
             recruiter_tracker: [],
         };        
+
         const resultPostUser = await collection.insertOne(user);
-        reply.send(resultPostUser)
+
+        if (resultPostUser.result.n === 1) {
+            const token = app.jwt.sign({username: user.username, id: user._id}, app.config.SECRET, { expiresIn: '2h' });
+            reply.send({ token });
+          } else {
+            reply.status(500).send({ error: 'Failed to create user' });
+          }
     }),
-
-    app.get('/users', getUserOpts, async (request, reply) => {        
-        const db = app.mongo.db;
-        const collection = db.collection('users');
-        const result = await collection.find().toArray();    
-        reply.send(result)
-    
-    }),
-
-    app.get('/users/:id', async(request, reply) => {
-        console.log(request.params.id)
-        const db = app.mongo.db;
-        const collection = db.collection('users');
-        const resultGetUserById = await collection.findOne({_id: request.params.id});        
-        reply.send(resultGetUserById);
-
-    })
-
 
     done()
 }
 
-module.exports = userRoutes
+module.exports = registerRoute
