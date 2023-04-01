@@ -1,6 +1,7 @@
-const app = require('fastify')({ logger: true, prettyPrint: { colorize: true, ignore: 'pid,hostname'}, ajv: { customOptions: {coerceTypes: false,}}})
+const app = require('fastify')({ logger: true, prettyPrint: { colorize: true, ignore: 'pid,hostname'}, ajv: { customOptions: {coerceTypes: true}}})
 const corsFatify = require('@fastify/cors')
 const envFastify = require('@fastify/env')
+const fastify = require('fastify')
 const dbOptions = require('./src/models/dbSchema')
 
 /* 
@@ -45,6 +46,7 @@ const start = async () => {
     //Registering @Fastify/JWT
     app.register(require('@fastify/jwt'), {
         secret: encodeURIComponent(app.config.SECRET),
+        sign: { expiresIn: '2h' }
       })
 
     //Registering @Fastify/Auth
@@ -52,8 +54,9 @@ const start = async () => {
         app.decorate('authenticate', async function (request, reply) {
            await request.jwtVerify();
          
-    })});        
- 
+    })});      
+    
+   
     /* 
     *Registering Routes
     */
