@@ -1,4 +1,4 @@
-const app = require('fastify')({ logger: true, prettyPrint: { colorize: true, ignore: 'pid,hostname'} })
+const app = require('fastify')({ logger: true, prettyPrint: { colorize: true, ignore: 'pid,hostname'}, ajv: { customOptions: {coerceTypes: false,}}})
 const corsFatify = require('@fastify/cors')
 const envFastify = require('@fastify/env')
 const dbOptions = require('./src/models/dbSchema')
@@ -28,11 +28,14 @@ const start = async () => {
         url: dbUrl,
         forceClose: true,
         useUnifiedTopology: true,
-      });
+      }).after(() => {
+        const db = app.mongo.db;
+        const usersCollection = db.collection('users');
+        usersCollection.createIndex({ username: 1 }, { unique: true })});
     
     //Debugging DB connection
     console.log({Server_Status: app.config.PORT})
-
+    
     /*    
     *
     * Registering Routes
@@ -46,6 +49,19 @@ const start = async () => {
 
     //Register route
     app.register(require('./src/routes/register') , { prefix: '/api/v1' })
+
+    
+    //Registering @Fastify/Swagger
+    app.register(require('@fastify/swagger'), {
+       exposeRoute: true,
+       routePrefix: '/documentation',        
+       swagger: {
+           info: { title: 'Job Tracker API', description: 'API for Job Tracker', version: '0.1.0' },            
+           schemes: ['http', 'https'],
+           consumes: ['application/json'],
+           produces: ['application/json']
+       },
+    }),
 
     //Running Server
     await app.listen({port:3000})    

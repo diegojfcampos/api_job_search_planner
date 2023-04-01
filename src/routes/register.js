@@ -5,8 +5,9 @@ const bcrypt = require('bcrypt');
 
 async function userRoutes(app, options, done) {
     //Register route
-    app.post('/register', userSchema, async (request, reply) => {
+    app.post('/register', {schema: {body: userSchema}}, async (request, reply) => {
         const {username, password} = request.body;
+
         const db = app.mongo.db;
         const collection = db.collection('users');
         const hashedPassword = await bcrypt.hash(password, 10) ;
@@ -36,8 +37,21 @@ async function userRoutes(app, options, done) {
         const resultGetUserById = await collection.findOne({_id: request.params.id});        
         reply.send(resultGetUserById);
 
-    })
+    }),
+    
+    app.put('/users/:id', async(request, reply) => {
+        const db = app.mongo.db;
+        const collection = db.collection('users');
+        const resultUpdateUserById = await collection.updateOne({_id: request.params.id}, {$set: request.body});
+        reply.send(resultUpdateUserById);
+    }),
 
+    app.delete('/users/:id', async(request, reply) => {
+        const db = app.mongo.db;
+        const collection = db.collection('users');
+        const resultDeleteUserById = await collection.deleteOne({_id: request.params.id});
+        reply.send(resultDeleteUserById);
+    }),
 
     done()
 }
