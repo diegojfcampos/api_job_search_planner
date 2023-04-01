@@ -1,27 +1,39 @@
-const {userSchema, getUserOpts} = require('../models/userSchema');
+const registerSchema = require('../models/registerSchema');
 const { v4: uuidv4 } = require('uuid');
 const bcrypt = require('bcrypt');
 
 
-async function userRoutes(app, options, done) {
+async function registerRoute(app, options, done) {
     //Register route
+<<<<<<< HEAD
     app.post('/register', {schema: {body: userSchema}}, async (request, reply) => {
+=======
+    app.post('/register', {schema: {body: registerSchema}}, async (request, reply) => {
+>>>>>>> 7482427 (build: created authentication with jwt dotenve and  route login)
         const {username, password} = request.body;
 
         const db = app.mongo.db;
         const collection = db.collection('users');
-        const hashedPassword = await bcrypt.hash(password, 10) ;
+        
         const user = {
             _id: uuidv4(),
             username,
-            password: hashedPassword,
+            password: await bcrypt.hash(password, 256),
             job_tracker: [],
             recruiter_tracker: [],
         };        
+
         const resultPostUser = await collection.insertOne(user);
-        reply.send(resultPostUser)
+
+        if (resultPostUser.result.n === 1) {
+            const token = app.jwt.sign({username: user.username, id: user._id}, app.config.SECRET, { expiresIn: '2h' });
+            reply.send({ token });
+          } else {
+            reply.status(500).send({ error: 'Failed to create user' });
+          }
     }),
 
+<<<<<<< HEAD
     app.get('/users', getUserOpts, async (request, reply) => {        
         const db = app.mongo.db;
         const collection = db.collection('users');
@@ -53,7 +65,9 @@ async function userRoutes(app, options, done) {
         reply.send(resultDeleteUserById);
     }),
 
+=======
+>>>>>>> 7482427 (build: created authentication with jwt dotenve and  route login)
     done()
 }
 
-module.exports = userRoutes
+module.exports = registerRoute

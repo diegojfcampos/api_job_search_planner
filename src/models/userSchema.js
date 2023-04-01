@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const userSchema = {
     type: 'object',
     required: ['username', 'password'],
@@ -10,6 +11,8 @@ const userSchema = {
         
     }
 }
+=======
+>>>>>>> 7482427 (build: created authentication with jwt dotenve and  route login)
 
 const getUserOpts = {
     schema: {
@@ -30,4 +33,4 @@ const getUserOpts = {
     }
 }
 
-module.exports = {userSchema, getUserOpts};
+module.exports = getUserOpts;
