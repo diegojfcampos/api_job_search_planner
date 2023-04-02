@@ -24,6 +24,8 @@ async function userRoutes(app, options, done) {
     }),
     
     app.put('/users/:id', async(request, reply) => {
+
+        if(request.body.username) return reply.status(400).send({error: 'Username cannot be changed'});
         const db = app.mongo.db;
         const collection = db.collection('users');
         const resultUpdateUserById = await collection.updateOne({_id: request.params.id}, {$set: request.body});
