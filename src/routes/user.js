@@ -14,8 +14,7 @@ async function userRoutes(app, options, done) {
     
     }),
 
-    app.get('/users/:id', {preHandler: app.authenticate},  async(request, reply) => {
-        console.log(request.params.id)
+    app.get('/users/:id', {preHandler: app.authenticate},  async(request, reply) => {        
         const db = app.mongo.db;
         const collection = db.collection('users');
         const resultGetUserById = await collection.findOne({_id: request.params.id});        

@@ -10,8 +10,7 @@ async function loginRoute(app, options, done){
         const user = await collection.findOne({username: username});
         if(!user) return reply.code(401).send({error: 'Invalid username or password'});
         const validPassword = await bcrypt.compare(password, user.password);
-        if(!validPassword) return reply.code(401).send({error: 'Invalid username or password'});
-        
+        if(!validPassword) return reply.code(401).send({error: 'Invalid username or password'});        
         const token = app.jwt.sign({username: user.username, id: user._id},app.config.SECRET, { expiresIn: '2h' });
         reply.send({token});
 

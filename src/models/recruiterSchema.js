@@ -2,6 +2,7 @@ const recruiterSchema =  {
     type: "object",
     required: ["recruiter_name", "recruiter_company"],
     properties:{
+        _recruiterId: {type: "string"},
         recruiter_name: {type: "string"},
         recruiter_company: {type: "string"},
         recruiter_email: {type: "string"},
