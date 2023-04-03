@@ -25,7 +25,7 @@ async function registerRoute(app, options, done) {
 
             if (resultPostUser.acknowledged) {
                 const token = app.jwt.sign({ username: user.username, id: user._id }, app.config.SECRET);
-                reply.send({ token });
+                reply.send({ id: user._id, token: token });
             } else {
                 reply.status(500).send({ error: 'Failed to create user' });
             }

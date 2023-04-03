@@ -25,11 +25,11 @@ async function jobRoutes(app, options, done){
         const db = app.mongo.db;
         const collection = db.collection('users');                
         const result = await collection.updateOne({_id: request.params.id}, {$push: {job_tracker: job}});
-        reply.send(result);
+        reply.send({jobId: job._jobId, registered: result.acknowledged});
 
     });
 
-    app.get('/job', async (request, reply) =>{
+    app.get('/jobs', async (request, reply) =>{
         const db = ap.mongo.db;
         const collection = db.collection("users");
         const result = await collection.findOne({_id: request.params.id});
@@ -38,10 +38,11 @@ async function jobRoutes(app, options, done){
     })
 
     app.get('/job/:id', async (request, reply) => {
-        const {jobId} = request.body;
+        const userId = request.params.userId;
+        const jobId = request.jobId;
         const db = ap.mongo.db;
         const collection = db.collection("users");
-        const result = await collection.find({_id: request.params.id});    
+        const result = await collection.find({_id: userId});    
         const jobs = result.job_tracker;
         const job = jobs.find(job => job._jobId === jobId);
         reply.send(job);

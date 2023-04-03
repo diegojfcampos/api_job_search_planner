@@ -1,3 +1,5 @@
+const jobSchema = require("./dbSchema");
+
 const getUserOpts = {
     schema: {
         response: {
@@ -8,7 +10,7 @@ const getUserOpts = {
                     properties: {
                         _id: {type: 'string'},
                         username: {type: 'string', format: 'email'},
-                        job_tracker: {type: 'array', items: {type: 'object'}},
+                        job_tracker: {type: 'array', items:  jobSchema},
                         recruiter_tracker: {type: 'array', items: {type: 'object'}},
                     }
                 }

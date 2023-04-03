@@ -37,7 +37,7 @@ const start = async () => {
         usersCollection.createIndex({ username: 1 }, { unique: true })});
     
     //Debugging DB connection
-    console.log({Server_Status: app.config.PORT})
+    console.log({Server_Status: "Running", Port: app.config.PORT, DB_Status: "Able to Connect"})
     
     /*
     *Registering Secure Session
@@ -56,7 +56,7 @@ const start = async () => {
          
     })});      
     
-   
+ 
     /* 
     *Registering Routes
     */
