@@ -4,7 +4,7 @@ const userSchema = require('../models/userSchema');
 
 async function userRoutes(app, options, done) {
 
-    //app.addHook('preHandler', app.authenticate);
+    app.addHook('preHandler', app.authenticate);
 
     app.get('/users', userSchema, async (request, reply) => {        
         const db = app.mongo.db;
