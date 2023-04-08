@@ -70,6 +70,7 @@ const start = async () => {
     app.register(require('./src/routes/login') , { prefix: '/api/v1' }); //Login
     app.register(require('./src/routes/user') , { prefix: '/api/v1' }); //User  
     app.register(require("./src/routes/job") , { prefix: '/api/v1' }); //Job
+    app.register(require('./src/routes/recruiter') , { prefix: '/api/v1' }); //Recruiter
     
     /* 
     *Documentation

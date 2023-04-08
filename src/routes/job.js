@@ -3,6 +3,8 @@ const UUID = require("uuid");
 
 async function jobRoutes(app, options, done){
 
+    app.addHook('preHandler', app.authenticate);
+
     app.post('/postjob/:id', jobSchema, async (request, reply) => {      
 
         const {job_title, company, job_url, job_description, job_location, job_type, job_salary, job_posted, job_applied, job_status, job_notes} = request.body;
@@ -26,7 +28,7 @@ async function jobRoutes(app, options, done){
         const collection = db.collection('users');             
         const validateUser = await collection.findOne({_id: request.params.id});
         
-        if(!validateUser) return reply.status(404).send({message: 'User not found'});
+        if(!validateUser) reply.status(404).send({message: 'User not found'});
 
         const result = await collection.updateOne({_id: request.params.id}, {$push: {job_tracker: job}});        
         reply.send({jobId: job._jobId, registered: result.acknowledged});
@@ -39,7 +41,7 @@ async function jobRoutes(app, options, done){
         const collection = db.collection('users');             
         const user = await collection.findOne({_id: request.params.userId});
         const jobs = user.job_tracker;
-        reply.send({jobs});
+        reply.send({jobs: jobs});
 
     })
 
@@ -54,7 +56,7 @@ async function jobRoutes(app, options, done){
         reply.send({job: result});
       });
 
-      app.put('/updatejob/:userId', async (request, reply) => {
+    app.put('/updatejob/:userId', async (request, reply) => {
         const jobId = request.body.jobId;
         const db = app.mongo.db;
         const collection = db.collection("users");    
@@ -75,15 +77,12 @@ async function jobRoutes(app, options, done){
         const result = await collection.updateOne(
             { _id: request.params.userId, job_tracker: { $elemMatch: { _jobId: jobId } } },
             { $set: updateObj }
-        );
+        );    
+        if (result.modifiedCount === 0) reply.status(404).send({ message:  "Job was not altered" });
     
-        if (result.modifiedCount === 0) return reply.status(404).send({ message:  result});
-    
-        return reply.status(200).send(result);
-    });
-    
-
-        
+        reply.send({jobpdated: jobId, updated: result.acknowledged});
+    });   
+ 
     app.delete('/deletejob/:userId', async (request, reply) => {
         const jobId = request.body.jobId;
         const userId = request.params.userId; 
@@ -95,7 +94,7 @@ async function jobRoutes(app, options, done){
         if(indexToDelete === -1) return reply.status(404).send({message: 'Job not found'});
         jobs.splice(indexToDelete, 1);
         await collection.updateOne({_id: userId}, {$set: {job_tracker: jobs}});
-        return reply.send({jobToDelete: jobId});
+        reply.send({jobDeleted: jobId});
       });
 
     done();

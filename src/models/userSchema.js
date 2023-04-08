@@ -1,4 +1,5 @@
-const jobSchema = require("./dbSchema");
+const jobSchema = require("./jobSchema");
+const recruiterSchema = require("./recruiterSchema");
 
 const getUserOpts = {
     schema: {
@@ -11,7 +12,7 @@ const getUserOpts = {
                         _id: {type: 'string'},
                         username: {type: 'string', format: 'email'},
                         job_tracker: {type: 'array', items:  jobSchema},
-                        recruiter_tracker: {type: 'array', items: {type: 'object'}},
+                        recruiter_tracker: {type: 'array', items: recruiterSchema},
                     }
                 }
             }

@@ -1,7 +1,5 @@
 const userSchema = require('../models/userSchema');
 
-
-
 async function userRoutes(app, options, done) {
 
     app.addHook('preHandler', app.authenticate);
@@ -14,7 +12,7 @@ async function userRoutes(app, options, done) {
     
     }),
 
-    app.get('/users/:id', {preHandler: app.authenticate},  async(request, reply) => {        
+    app.get('/users/:id',  async(request, reply) => {        
         const db = app.mongo.db;
         const collection = db.collection('users');
         const resultGetUserById = await collection.findOne({_id: request.params.id});        
