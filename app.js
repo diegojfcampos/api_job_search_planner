@@ -1,7 +1,8 @@
 const app = require('fastify')({ logger: true, prettyPrint: { colorize: true, ignore: 'pid,hostname'}, ajv: { customOptions: {coerceTypes: true}}})
 const corsFatify = require('@fastify/cors')
 const envFastify = require('@fastify/env')
-const fastify = require('fastify')
+
+
 const dbOptions = require('./src/models/dbSchema')
 
 /* 
@@ -67,6 +68,32 @@ const start = async () => {
         reply.send({ Server_Status: 'Running' })
     });
 
+       /* 
+    *Documentation
+    */
+
+    //Registering @Fastify/Swagger
+    app.register(require('@fastify/swagger'), {})
+    app.register(require('@fastify/swagger-ui'), {
+        routePrefix: '/api/v1/documentation',
+        swagger: {
+          info: {
+            title: 'Job Tracker API',
+            description: 'API for Job Tracker',
+            version: '0.1.0'
+          },
+          schemes: ['http', 'https'],
+          consumes: ['application/json'],
+          produces: ['application/json'],
+          // Definir o método HTTP como GET para a rota do Swagger
+          methods: ['GET'] 
+        },
+
+        exposeRoute: true
+    })
+      
+    app.log.info("Swagger Documentation configured")
+
     //Routes
     app.register(require('./src/routes/register') , { prefix: '/api/v1' }); //Signup
     app.register(require('./src/routes/login') , { prefix: '/api/v1' }); //Login
@@ -74,24 +101,9 @@ const start = async () => {
     app.register(require("./src/routes/job") , { prefix: '/api/v1' }); //Job
     app.register(require('./src/routes/recruiter') , { prefix: '/api/v1' }); //Recruiter'))
     
-    /* 
-    *Documentation
-    */
 
-    //Registering @Fastify/Swagger
-    app.register(require('@fastify/swagger'), {
-        exposeRoute: true,
-        routePrefix: '/api/v1/documentation',        
-        swagger: {
-            info: { title: 'Job Tracker API', description: 'API for Job Tracker', version: '0.1.0' },            
-            schemes: ['http', 'https'],
-            consumes: ['application/json'],
-            produces: ['application/json']
-        },
-    }),
-    app.log.info("Swagger Documentation configured")
     //Running Server
-    await app.listen({port:3001})    
+    await app.listen({port:3000})    
 
     }catch (err) {
         app.log.error(err)

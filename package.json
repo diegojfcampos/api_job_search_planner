@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node --watch --no-warnings app.js"
+    "dev": "node --watch --no-warnings app.js | npx pino-pretty"
   },
   "repository": {
     "type": "git",
@@ -25,6 +25,7 @@
     "@fastify/jwt": "^6.7.1",
     "@fastify/mongodb": "^7.0.0",
     "@fastify/swagger": "^8.3.1",
+    "@fastify/swagger-ui": "^1.7.0",
     "bcrypt": "^5.1.0",
     "fastify": "^4.15.0",
     "uuid": "^9.0.0"
