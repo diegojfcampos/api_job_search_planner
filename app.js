@@ -18,6 +18,7 @@ const start = async () => {
         credentials: true,
         maxAge: 3600
     })
+    app.log.info("Cors Registered")
 
     //Registering @env envoirment variables 
     await app.register(envFastify, dbOptions);
@@ -25,7 +26,7 @@ const start = async () => {
     const dbPassword = encodeURIComponent(app.config.DB_PASSWORD);
     const dbName = encodeURIComponent(app.config.DB_NAME);
     const dbUrl = `mongodb+srv://${dbUserName}:${dbPassword}@cluster0.uvzqwgp.mongodb.net/${dbName}?retryWrites=true&w=majority`;
-
+    app.log.info("Dotenv Configured")
     //Registering and connecting to MongoDB
     app.register(require('@fastify/mongodb'), {
         url: dbUrl,
@@ -37,7 +38,7 @@ const start = async () => {
         usersCollection.createIndex({ username: 1 }, { unique: true })});
     
     //Debugging DB connection
-    console.log({Server_Status: "Running", Port: app.config.PORT, DB_Status: "Able to Connect"})
+    app.log.info("MongoDB Connected")
     
     /*
     *Registering Secure Session
@@ -48,6 +49,7 @@ const start = async () => {
         secret: encodeURIComponent(app.config.SECRET),
         sign: { expiresIn: '2h' }
       })
+      app.log.info("JWT decoding token and verifying signature")
 
     //Registering @Fastify/Auth
     app.register(require('@fastify/auth')).after(() => {
@@ -55,7 +57,7 @@ const start = async () => {
            await request.jwtVerify();
          
     })});     
-     
+    app.log.info("Routes protected with JWT and Auth")
     /* 
     *Registering Routes
     */
@@ -70,7 +72,7 @@ const start = async () => {
     app.register(require('./src/routes/login') , { prefix: '/api/v1' }); //Login
     app.register(require('./src/routes/user') , { prefix: '/api/v1' }); //User  
     app.register(require("./src/routes/job") , { prefix: '/api/v1' }); //Job
-    app.register(require('./src/routes/recruiter') , { prefix: '/api/v1' }); //Recruiter
+    app.register(require('./src/routes/recruiter') , { prefix: '/api/v1' }); //Recruiter'))
     
     /* 
     *Documentation
@@ -87,9 +89,9 @@ const start = async () => {
             produces: ['application/json']
         },
     }),
-
+    app.log.info("Swagger Documentation configured")
     //Running Server
-    await app.listen({port:3000})    
+    await app.listen({port:3001})    
 
     }catch (err) {
         app.log.error(err)

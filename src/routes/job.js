@@ -17,9 +17,9 @@ async function jobRoutes(app, options, done){
             job_description,
             job_location,
             job_type,
-            job_salary: job_salary || null,
-            job_posted: new Date(job_posted) || null,
-            job_applied: new Date(job_applied) || null,
+            job_salary,
+            job_posted: new Date() || null,
+            job_applied: new Date() || null,
             job_status,
             job_notes
         };

@@ -1,9 +1,11 @@
-const recrecuiterSchema = require('../models/recruiterSchema');
+const recruiterSchema = require('../models/recruiterSchema');
 const UUID = require("uuid");
 
 async function recruiterRoutes(app, options, done) {
 
-    app.post('/postrecruiter/:userId',recrecuiterSchema, async (request, reply) => {
+    app.addHook('preHandler',  app.authenticate)
+    
+    app.post('/postrecruiter/:userId',recruiterSchema, async (request, reply) => {
 
         const {recruiter_name, recruiter_email, recruiter_phone, recruiter_socialmedia, recruiter_notes} = request.body;
         const recruiter = {
@@ -36,7 +38,7 @@ async function recruiterRoutes(app, options, done) {
     }),
 
     app.get('/getrecruiter/:userId', async (request, reply) => {
-        const recruiterId = request.body.recruiterId;
+        const recruiterId = request.body;
         const db = app.mongo.db;
         const collection = db.collection('users');
         const user = await collection.findOne({_id: request.params.userId});
@@ -47,8 +49,9 @@ async function recruiterRoutes(app, options, done) {
 
     app.put('/updaterecruiter/:userId', async (request, reply) => {
         const recruiterId = request.body.recruiterId;
-        const db = app.mongo.sb;
+        const db = app.mongo.db;
         const collection = db.collection('users');
+        const user = await collection.findOne({_id: request.params.userId});
 
         const updateObj = {};
         if(request.body.recruiter_name) updateObj['recruiter_tracker.$.recruiter_name'] = request.body.recruiter_name;

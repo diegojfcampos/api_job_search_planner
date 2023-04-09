@@ -13,4 +13,6 @@ const recruiterSchema =  {
     }
 }
 
+
+
 module.exports = recruiterSchema;
