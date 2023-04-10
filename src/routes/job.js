@@ -1,5 +1,7 @@
-const jobSchema = require("../models/jobSchema");
+const {jobSchema, getJobsOpts, getJobOpts, putJobOpts, deleteJobOpts} = require("../models/jobSchema");
 const UUID = require("uuid");
+
+
 
 async function jobRoutes(app, options, done){
 
@@ -35,7 +37,7 @@ async function jobRoutes(app, options, done){
 
     });
 
-    app.get('/getjobs/:userId', async (request, reply) =>{ 
+    app.get('/getjobs/:userId', getJobsOpts, async (request, reply) =>{ 
 
         const db = app.mongo.db;
         const collection = db.collection('users');             
@@ -45,7 +47,7 @@ async function jobRoutes(app, options, done){
 
     })
 
-    app.get('/getjob/:userId', async (request, reply) => {
+    app.get('/getjob/:userId', getJobOpts, async (request, reply) => {
         
         const jobId = request.body;
         const db = app.mongo.db;
@@ -56,7 +58,7 @@ async function jobRoutes(app, options, done){
         reply.send({job: result});
       });
 
-    app.put('/updatejob/:userId', async (request, reply) => {
+    app.put('/updatejob/:userId', putJobOpts, async (request, reply) => {
         const jobId = request.body.jobId;
         const db = app.mongo.db;
         const collection = db.collection("users");    
@@ -80,10 +82,10 @@ async function jobRoutes(app, options, done){
         );    
         if (result.modifiedCount === 0) reply.status(404).send({ message:  "Job was not altered" });
     
-        reply.send({jobpdated: jobId, updated: result.acknowledged});
+        reply.send({jobupdated: jobId, updated: result.acknowledged});
     });   
  
-    app.delete('/deletejob/:userId', async (request, reply) => {
+    app.delete('/deletejob/:userId', deleteJobOpts, async (request, reply) => {
         const jobId = request.body.jobId;
         const userId = request.params.userId; 
         const db = app.mongo.db;
@@ -91,10 +93,10 @@ async function jobRoutes(app, options, done){
         const user = await collection.findOne({_id: userId});
         const jobs = user.job_tracker;
         const indexToDelete = jobs.findIndex(job => job._jobId === jobId); 
-        if(indexToDelete === -1) return reply.status(404).send({message: 'Job not found'});
+        if(indexToDelete === -1) reply.status(404).send({message: 'Job not found'});
         jobs.splice(indexToDelete, 1);
         await collection.updateOne({_id: userId}, {$set: {job_tracker: jobs}});
-        reply.send({jobDeleted: jobId});
+        reply.send({jobDeleted: jobId, deleted: true});
       });
 
     done();

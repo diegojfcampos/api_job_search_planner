@@ -46,6 +46,15 @@ async function recruiterRoutes(app, options, done) {
         const recruiter = recruiters.find(recruiter => recruiters._recruiterId === recruiterId);
         reply.send({recruiter})
     }),
+    
+    app.get('/getsortrecruiters/:userId', async (request, reply) => {        
+        const db = app.mongo.db;
+        const collection = db.collection('users');
+        const user = await collection.findOne({_id: request.params.userId});
+        const recruiters = user.recruiter_tracker;
+        recruiters.sort((a, b) => a.recruiter_name.localeCompare(b.recruiter_name))
+        reply.send({recruiters})
+    }),
 
     app.put('/updaterecruiter/:userId', async (request, reply) => {
         const recruiterId = request.body.recruiterId;
@@ -81,7 +90,7 @@ async function recruiterRoutes(app, options, done) {
         recruiters.splice(indexToDelete, 1);
         await collection.updateOne({_id: userId}, {$set: {recruiter_tracker: recruiters}});
         reply.send({recruiterDeleted: recruiterId});
-      });
+      });      
     
     done()
 }
