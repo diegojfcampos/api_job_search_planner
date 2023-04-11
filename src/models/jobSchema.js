@@ -18,17 +18,19 @@ const jobSchema = {
 };
 
 const getJobOpts = {
-  200: {
-      type: 'object',
-      properties: {
-          job: {
-              type: 'array',
-              items: jobSchema
-          }
-      },
-      required: ['job']
+  response: {
+    200: {
+        type: 'object',
+        properties: {
+            job: {                
+                items: jobSchema
+            }
+        },
+        required: ['job']
+    }
   }
 };
+
 const getJobsOpts = {
   response: {
     200: {
@@ -129,9 +131,5 @@ const deleteJobOpts = {
     }
   }
 };
-
-
-
-
 
 module.exports = {jobSchema, getJobsOpts, getJobOpts, putJobOpts, deleteJobOpts};

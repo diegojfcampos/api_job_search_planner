@@ -1,4 +1,4 @@
-const recruiterSchema = require('../models/recruiterSchema');
+const {recruiterSchema,getRecruiterOpts, getRecruitersOpts, putRecruterOpts, deleteJobOpts} = require('../models/recruiterSchema');
 const UUID = require("uuid");
 
 async function recruiterRoutes(app, options, done) {
@@ -29,7 +29,7 @@ async function recruiterRoutes(app, options, done) {
         
     }),
 
-    app.get('/getrecruiters/:userId', async (request, reply) => {
+    app.get('/getrecruiters/:userId', getRecruitersOpts,  async (request, reply) => {
         const db = app.mongo.db;
         const collection = db.collection('users');
         const user = await collection.findOne({_id: request.params.userId});
@@ -37,7 +37,7 @@ async function recruiterRoutes(app, options, done) {
         reply.send({recruiters: recruiters});
     }),
 
-    app.get('/getrecruiter/:userId', async (request, reply) => {
+    app.get('/getrecruiter/:userId', getRecruiterOpts, async (request, reply) => {
         const recruiterId = request.body;
         const db = app.mongo.db;
         const collection = db.collection('users');
@@ -56,7 +56,7 @@ async function recruiterRoutes(app, options, done) {
         reply.send({recruiters})
     }),
 
-    app.put('/updaterecruiter/:userId', async (request, reply) => {
+    app.put('/updaterecruiter/:userId', putRecruterOpts, async (request, reply) => {
         const recruiterId = request.body.recruiterId;
         const db = app.mongo.db;
         const collection = db.collection('users');
@@ -78,7 +78,7 @@ async function recruiterRoutes(app, options, done) {
 
     }),
 
-    app.delete('/deleterecruiter/:userId', async (request, reply) => {
+    app.delete('/deleterecruiter/:userId', deleteJobOpts, async (request, reply) => {
         const recruiterId = request.body.recruiterId;
         const userId = request.params.userId; 
         const db = app.mongo.db;
